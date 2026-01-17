@@ -70,15 +70,15 @@ match <-> team : OPPOSER
 
 ```
 tournament: id, name, date, description, status
-CREER, 0N tournament, 11 user
+CREER, 11 tournament, 0N user
 user: id, username, email, password, role
 
-PARTICIPER, 01 tournament, 0N team
+PARTICIPER, 0N tournament, 01 team
 team: id, name, player1_name, player2_name
-CONSTITUER, 01 team, 1N [N <= 2] user
+CONSTITUER, 1N [N <= 2] team, 01  user
 
 
-OPPOSER, 0N match, 22 team
+OPPOSER, 22 match, 0N team
 match: id, score_team_1, score_team_2, status
 
 ```
