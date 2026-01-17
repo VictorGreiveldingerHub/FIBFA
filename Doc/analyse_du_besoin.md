@@ -69,16 +69,16 @@ match <-> team : OPPOSER
 ## Mocodo : [MCD](./FIBFA.svg)
 
 ```
-tournament: id, name, date, description, status, created_by, isGenerated
+tournament: id, name, date, description, status
 CREER, 0N tournament, 11 user
 user: id, username, email, password, role
 
 PARTICIPER, 01 tournament, 0N team
-team: id, name, player1_name, player2_name, created_by
+team: id, name, player1_name, player2_name
 CONSTITUER, 01 team, 1N [N <= 2] user
 
 
 OPPOSER, 0N match, 22 team
-match: id, score_team_1, score_team_2, status, match_number
+match: id, score_team_1, score_team_2, status
 
 ```
