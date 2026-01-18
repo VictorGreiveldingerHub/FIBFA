@@ -7,61 +7,74 @@
 
 ### user
 
-| Nom        | Type        | null ?   | default           | commentaire                                     |
-| ---------- | ----------- | -------- | ----------------- | ----------------------------------------------- |
-| id         | SERIAL      | NOT NULL | -                 | SERIAL not null et gère sa valeur - PK          |
-| pseudo     | VARCHAR(50) | NOT NULL | -                 | UNIQUE                                          |
-| email      | VARCHAR(50) | NOT NULL | -                 | UNIQUE                                          |
-| password   | VARCHAR(50) | NOT NULL | -                 |                                                 |
-| status     | VARCHAR(5)  | NOT NULL | "USER"            | autre valeur - "ADMIN"                          |
-| team_id    | INT         | NOT NULL | -                 | relation 1-N : REFERENCES "team"("id")          |
-| created_at | TIMESTAMP   | NOT NULL | CURRENT_TIMESTAMP |                                                 |
-| updated_at | TIMESTAMP   | NULL     | -                 | pour l'instant ca existe, meme si pas d'utilité |
+| Nom         | Type         | null ?   | default           | Commentaire                                     |
+| ----------- | ------------ | -------- | ----------------- | ----------------------------------------------- |
+| id          | SERIAL       | NOT NULL | -                 | SERIAL not null et gère sa valeur - PK          |
+| pseudo      | VARCHAR(50)  | NOT NULL | -                 | UNIQUE                                          |
+| email       | VARCHAR(100) | NOT NULL | -                 | UNIQUE                                          |
+| password    | VARCHAR(255) | NOT NULL | -                 | Pour les hash bcrypt                            |
+| status      | VARCHAR(20)  | NOT NULL | "USER"            | autre valeur - "ADMIN"                          |
+| is_verified | BOOLEAN      | NOT NULL | FALSE             |                                                 |
+| team_id     | INT          |          |                   | REFERENCES "team"("id") ON DELETE SET NULL      |
+| created_at  | TIMESTAMP    | NOT NULL | CURRENT_TIMESTAMP |                                                 |
+| updated_at  | TIMESTAMP    | -        | -                 | pour l'instant ca existe, meme si pas d'utilité |
 
 ### tournament
 
-| Nom         | Type         | null ?   | default                 | commentaire                                 |
+| Nom         | Type         | null ?   | default                 | Commentaire                                 |
 | ----------- | ------------ | -------- | ----------------------- | ------------------------------------------- |
 | id          | SERIAL       | NOT NULL | -                       | SERIAL not null et gère sa valeur - PK      |
 | name        | VARCHAR(255) | NOT NULL | -                       | UNIQUE                                      |
-| date        | DATE         | NOT NULL | DATE.now()              | SELECT now();                               |
-| description | VARCHAR(50)  | NOT NULL | "Tournois de Baby-Foot" |                                             |
-| status      | VARCHAR(11)  | NOT NULL | "PENDING"               | autres valeurs - "IN_PROGRESS" - "FINISHED" |
-| user_id     | INT          | NOT NULL | -                       | relation 1-N : REFERENCES "user"("id")      |
+| date        | DATE         | NOT NULL | CURRENT_DATE            |                                             |
+| description | TEXT         | NOT NULL | "Tournois de Baby-Foot" |                                             |
+| status      | VARCHAR(20)  | NOT NULL | "PENDING"               | autres valeurs - "IN_PROGRESS" - "FINISHED" |
+| creator_id  | INT          | NOT NULL |                         | REFERENCES "user"("id") ON DELETE CASCADE   |
 | created_at  | TIMESTAMP    | NOT NULL | CURRENT_TIMESTAMP       |                                             |
-| updated_at  | TIMESTAMP    | NULL     | -                       |                                             |
+| updated_at  | TIMESTAMP    | -        | -                       |                                             |
 
 ### match
 
-| Nom          | Type        | null ?   | default           | commentaire                                       |
-| ------------ | ----------- | -------- | ----------------- | ------------------------------------------------- |
-| id           | SERIAL      | NOT NULL | -                 | SERIAL not null et gère sa valeur - PK            |
-| score_team_1 | INT         | NOT NULL | 0                 | on pourra calculer le classement via cette donnée |
-| score_team_1 | INT         | NOT NULL | 0                 | on pourra calculer le classement via cette donnée |
-| status       | VARCHAR(50) | NOT NULL | "PENDING"         | autres valeurs "IN_PROGRESS" - "FINISHED"         |
-| created_at   | TIMESTAMP   | NOT NULL | CURRENT_TIMESTAMP |                                                   |
-| updated_at   | TIMESTAMP   | NULL     | -                 |                                                   |
+| Nom           | Type        | null ?   | default           | Commentaire                                     |
+| ------------- | ----------- | -------- | ----------------- | ----------------------------------------------- |
+| id            | SERIAL      | NOT NULL | -                 | SERIAL not null et gère sa valeur - PK          |
+| status        | VARCHAR(20) | NOT NULL | "PENDING"         | autres valeurs "IN_PROGRESS" - "FINISHED"       |
+| tournament_id | INT         | NOT NULL | -                 | REFERENCES "tournament"("id") ON DELETE CASCADE |
+| created_at    | TIMESTAMP   | NOT NULL | CURRENT_TIMESTAMP |                                                 |
+| updated_at    | TIMESTAMP   | -        | -                 |                                                 |
 
 ### team
 
-| Nom           | Type        | null ?   | default           | commentaire                                  |
-| ------------- | ----------- | -------- | ----------------- | -------------------------------------------- |
-| id            | SERIAL      | NOT NULL | -                 | SERIAL not null et gère sa valeur - PK       |
-| name          | VARCHAR(50) | NOT NULL | -                 |                                              |
-| player_1      | VARCHAR(50) | NOT NULL | -                 |                                              |
-| player_2      | VARCHAR(50) | NOT NULL | -                 |                                              |
-| tournament_id | INT         | NOT NULL | -                 | relation 1-N : REFERENCES "tournament"("id") |
-| created_at    | TIMESTAMP   | NOT NULL | CURRENT_TIMESTAMP |                                              |
-| updated_at    | TIMESTAMP   | NULL     | -                 |                                              |
+| Nom        | Type         | null ?   | default           | Commentaire                            |
+| ---------- | ------------ | -------- | ----------------- | -------------------------------------- |
+| id         | SERIAL       | NOT NULL | -                 | SERIAL not null et gère sa valeur - PK |
+| name       | VARCHAR(255) | NOT NULL | -                 |                                        |
+| created_at | TIMESTAMP    | NOT NULL | CURRENT_TIMESTAMP |                                        |
+| updated_at | TIMESTAMP    | -        | -                 |                                        |
+
+## Liste des relation 1-N
+
+user - tournament
+team - user
+tournament - match
 
 ## Liste des tables de liaison
 
-team <-> match
+match <-> team
+team <-> tournament
 
-### team_play_match
+### match_team
 
-| Nom      | Type | commentaire              |
-| -------- | ---- | ------------------------ |
-| team1_id | INT  | REFERENCES "team"("id")  |
-| team2_id | INT  | REFERENCES "team"("id")  |
-| match_id | INT  | REFERENCES "match"("id") |
+| Nom           | Type | Commentaire                                         |
+| ------------- | ---- | --------------------------------------------------- |
+| match_id      | INT  | NOT NULL REFERENCES "match"("id") ON DELETE CASCADE |
+| team_id       | INT  | NOT NULL REFERENCES "team"("id") ON DELETE CASCADE  |
+| team_position | INT  | CHECK ("team_position" IN (1, 2))                   |
+| score         | INT  | DEFAULT 0                                           |
+
+### team_tournament
+
+| Nom           | Type      | Commentaire                                              |
+| ------------- | --------- | -------------------------------------------------------- |
+| team_id       | INT       | NOT NULL REFERENCES "team"("id") ON DELETE CASCADE       |
+| tournament_id | INT       | NOT NULL REFERENCES "tournament"("id") ON DELETE CASCADE |
+| created_at    | TIMESTAMP | NOT NULL CURRENT_TIMESTAMP                               |

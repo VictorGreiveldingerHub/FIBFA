@@ -40,6 +40,7 @@ Une application qui permet aux utilisateurs de créer, gérer des tournois de ba
 Des utilisateurs qui peuvent :
 
 - s'inscrire à des tournois
+- créer une team
 - voir les matchs
 - suivre les résultats
 
@@ -69,16 +70,16 @@ match <-> team : OPPOSER
 ## Mocodo : [MCD](./FIBFA.svg)
 
 ```
-tournament: id, name, date, description, status
 CREER, 11 tournament, 0N user
+tournament: id, name, date, description, status
+SE_DEROULER_DANS, 11 match, 0N tournament
+
 user: id, username, email, password, role
+PARTICIPER, 0N tournament, 0N team
+match: id, status
 
-PARTICIPER, 0N tournament, 01 team
-team: id, name, player1_name, player2_name
-CONSTITUER, 1N [N <= 2] team, 01  user
-
-
+CONSTITUER, 22 team, 01  user
+team: id, name,
 OPPOSER, 22 match, 0N team
-match: id, score_team_1, score_team_2, status
 
 ```
