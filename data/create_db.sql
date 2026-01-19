@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS "team" CASCADE;
 
 CREATE TABLE "team"(
   "id" SERIAL PRIMARY KEY,
-  "name" VARCHAR(255) NOT NULL,
+  "name" VARCHAR(255) NOT NULL UNIQUE,
   "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" TIMESTAMP
 );
@@ -65,6 +65,8 @@ CREATE TABLE "match_team"(
   "team_id" INT NOT NULL REFERENCES "team"("id") ON DELETE CASCADE,
   "team_position" INT NOT NULL CHECK ("team_position" IN (1, 2)),
   "score" INT NOT NULL DEFAULT 0,
+  "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" TIMESTAMP,
   PRIMARY KEY ("match_id", "team_id"),
   UNIQUE ("match_id", "team_position")
 );
@@ -73,6 +75,7 @@ CREATE TABLE "team_tournament"(
   "team_id" INT NOT NULL REFERENCES "team"("id") ON DELETE CASCADE,
   "tournament_id" INT NOT NULL REFERENCES "tournament"("id") ON DELETE CASCADE,
   "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" TIMESTAMP,
   PRIMARY KEY ("team_id", "tournament_id")
 );
 
