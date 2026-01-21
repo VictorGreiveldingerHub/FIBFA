@@ -26,7 +26,11 @@ Tournament.init(
       allowNull: false,
       defaultValue: "PENDING",
     },
-    // Pas besoin de définir les clés étrangère ici, Sequelize le fera dans les associations
+    // Quand même ajouter le champ pour les create / insert
+    creator_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   {
     // Définition des options de BDD

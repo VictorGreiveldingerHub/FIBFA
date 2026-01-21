@@ -1,4 +1,4 @@
-const Match = require("../models/Match");
+const { Match } = require("../models");
 
 const matchController = {
   // Méthode de récupération de tous les matchs
@@ -8,22 +8,28 @@ const matchController = {
 
       res.send(matchs);
     } catch (error) {
-      console.log(error);
+      console.trace(error);
+      res.status(500).send(error);
     }
   },
 
   // Méthode de récupération d'un match
-  getOne: async (req, res) => {
+  getOne: async (req, res, next) => {
     try {
+      // Controle si l'id est valide
+      if (req.params.id === "0") {
+        return next();
+      }
       const matchId = req.params.id;
-      const match = await Match.findByPk(matchId, {});
+      const match = await Match.findByPk(matchId);
 
       if (!match) {
         return next();
       }
       res.send(match);
     } catch (error) {
-      console.log(error);
+      console.trace(error);
+      res.status(500).send(error);
     }
   },
 };

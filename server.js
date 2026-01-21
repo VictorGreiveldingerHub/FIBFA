@@ -6,9 +6,11 @@ const app = express();
 
 const router = require("./app/router");
 
-app.use(router);
-
+// Pour parser le body, à placer avant le router ....
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(router);
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
