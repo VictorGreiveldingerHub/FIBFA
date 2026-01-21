@@ -31,8 +31,7 @@ const tournamentController = {
     try {
       const tournamentId = req.params.id;
 
-      const tournamentInfos = await Tournament.findOne({
-        where: { id: tournamentId },
+      const tournamentDatas = await Tournament.findByPk(tournamentId, {
         include: [
           {
             model: Team,
@@ -42,33 +41,44 @@ const tournamentController = {
         ],
       });
 
-      if (!tournamentInfos) {
+      if (!tournamentDatas) {
         return next(); // 404
       }
 
-      res.send(tournamentInfos);
+      res.send(tournamentDatas);
     } catch (error) {
       console.trace(error);
       res.status(500).send(error);
     }
   },
 
-  //
+  // Récupère les teams présentent dans un tournois, passe par une fonction de génération de match (round robin)
+  // selon le tournois correspondant,
+  // génère le tableau de match correspondant
   generate: async (req, res, next) => {
     try {
+      // Je rècupère l'id du tournois correspondant
       let tournamentId = req.params.id;
+      // Initialisation du tableau de match
       const teamsPerTournament = [];
-      const tournamentData = await Tournament.findAll({
+      // Récupération des teams associées à un tournois
+      const tournamentDatas = await Tournament.findByPk(tournamentId, {
         include: [{ model: Team, as: "teams" }],
-        where: { id: tournamentId },
       });
-      for (let datas of tournamentData) {
+
+      if (!tournamentDatas) {
+        return next(); // 404
+      }
+
+      // Récupération des noms des teams
+      // Voir plus tard si besoin id (pour modifier les scores ?)
+      for (let datas of tournamentDatas) {
         for (let team of datas.teams) {
           teamsPerTournament.push(team.name);
         }
       }
-      console.log(teamsPerTournament);
 
+      // Génération des matchs
       const generated = generateRoundRobinMatchs(teamsPerTournament);
 
       res.send(generated);
@@ -78,38 +88,31 @@ const tournamentController = {
     }
   },
 
+  // Création d'un tournois
   create: async (req, res, next) => {
     try {
-      const { name, date, description, creator_id } = req.body;
-      const newTournament = new Tournament({
-        name,
-        date,
-        description,
-        creator_id: parseInt(creator_id),
-      });
+      // Peut être plus optimisé (moins d'appel à la BDD)
+      const tournament = await Tournament.create(req.body);
 
-      await newTournament.save();
-
-      res.send(newTournament);
+      res.send(tournament);
     } catch (error) {
       console.trace(error);
       res.status(500).send(error);
     }
   },
 
+  // Suppression d'un tournois
   delete: async (req, res, next) => {
     try {
-      const tournamentID = req.params.id;
+      const tournamentId = req.params.id;
+      const tournament = await Tournament.findByPk(tournamentId);
 
-      const deletedTournament = await Tournament.destroy({
-        where: { id: tournamentID },
-      });
-
-      if (deletedTournament === 0) {
+      if (!tournament) {
         return next();
       }
 
-      res.status(200).json({ message: "Tournoi supprimé avec succès" });
+      await tournament.destroy();
+      res.send("Tournoi supprimé avec succès");
     } catch (error) {
       console.trace(error);
       res.status(500).send(error);
