@@ -20,7 +20,6 @@ DROP TABLE IF EXISTS "team" CASCADE;
 -- Création des tables
 -- ===================
 
-
 CREATE TABLE "team"(
   "id" SERIAL PRIMARY KEY,
   "name" VARCHAR(255) NOT NULL UNIQUE,
@@ -63,7 +62,7 @@ CREATE TABLE "match"(
 CREATE TABLE "match_team"(
   "match_id" INT NOT NULL REFERENCES "match"("id") ON DELETE CASCADE,
   "team_id" INT NOT NULL REFERENCES "team"("id") ON DELETE CASCADE,
-  "team_position" INT NOT NULL CHECK ("team_position" IN (1, 2)),
+  "team_position" INT NOT NULL CHECK ("team_position" IN (0, 1)),
   "score" INT NOT NULL DEFAULT 0,
   "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" TIMESTAMP,
@@ -141,36 +140,6 @@ VALUES
   ('Liga', 'Tournois espagnol', 1),
   ('Premiere League', 'Tournois britannique', 1);
 
--- ================
---      MATCH
--- ================
-INSERT INTO "match" ("status", "tournament_id", "created_at", "updated_at") 
-VALUES
-  ('COMPLETED', 1, '2025-01-13 18:00:00', '2025-01-13 20:00:00'),
-  ('IN_PROGRESS', 1, '2025-01-16 18:00:00', '2025-01-16 19:30:00'),
-  ('PENDING', 1, '2025-01-17 18:00:00', NULL);
-
--- ================
---    MATCH_TEAM
--- ================
-
--- Match 1 (COMPLETED): Barcelone vs Real Madrid (3-2)
-INSERT INTO "match_team" ("match_id", "team_id", "team_position", "score") 
-VALUES 
-  (1, 1, 1, 3), 
-  (1, 2, 2, 2);
-
--- Match 2 (IN_PROGRESS): Bayern vs PSG (1-1)
-INSERT INTO "match_team" ("match_id", "team_id", "team_position", "score") 
-VALUES 
-  (2, 3, 1, 1), 
-  (2, 4, 2, 1);
-
--- Match 3 (PENDING): Manchester City vs Manchester United (0-0)
-INSERT INTO "match_team" ("match_id", "team_id", "team_position", "score") 
-VALUES 
-  (3, 5, 1, 0), 
-  (3, 6, 2, 0);
 
 -- ================
 -- TEAM_TOURNAMENT

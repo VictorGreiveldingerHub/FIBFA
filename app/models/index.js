@@ -5,6 +5,7 @@ const Match = require("./Match");
 const Team = require("./Team");
 const Tournament = require("./Tournament");
 const User = require("./User");
+const MatchTeam = require("./MatchTeam");
 
 // Pour chaques associations, on a 2 config a faire
 // L'une dans un sens, et l'autre dans le sens inverse
@@ -29,19 +30,19 @@ Match.belongsTo(Tournament, {
 //  team <-> match
 // ===============
 
-Match.belongsToMany(Team, {
-  through: "match_team",
-  foreignKey: "match_id",
-  otherKey: "team_id",
-  as: "teams",
-});
+// Match.belongsToMany(Team, {
+//   through: "match_team",
+//   foreignKey: "match_id",
+//   otherKey: "team_id",
+//   as: "teams",
+// });
 
-Team.belongsToMany(Match, {
-  through: "match_team",
-  foreignKey: "team_id",
-  otherKey: "match_id",
-  as: "matchs",
-});
+// Team.belongsToMany(Match, {
+//   through: "match_team",
+//   foreignKey: "team_id",
+//   otherKey: "match_id",
+//   as: "matchs",
+// });
 
 // ==============
 // team <-> user
@@ -92,5 +93,24 @@ Tournament.belongsTo(User, {
   as: "creator",
 });
 
+// =========================
+// match <-> team
+//  team <-> match
+// =========================
+
+Match.belongsToMany(Team, {
+  through: MatchTeam,
+  foreignKey: "match_id",
+  otherKey: "team_id",
+  as: "teams",
+});
+
+Team.belongsToMany(Match, {
+  through: MatchTeam,
+  foreignKey: "team_id",
+  otherKey: "match_id",
+  as: "matchs",
+});
+
 // Export des models
-module.exports = { Match, Team, Tournament, User };
+module.exports = { Match, Team, Tournament, User, MatchTeam };
