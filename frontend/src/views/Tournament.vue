@@ -57,7 +57,7 @@ const tournaments = ref([
     teamsCount: 2,
   },
   {
-    id: 1,
+    id: 4,
     name: "Liga",
     date: "2026-02-10",
     description: "Tournoi officiel pour les équipes espagnoles.",
