@@ -1,5 +1,7 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+  <div
+    class="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6"
+  >
     <div class="flex flex-row flex-wrap gap-6 justify-center items-center">
       <div
         v-for="tournament in tournaments"
@@ -13,7 +15,7 @@
           class="inline-block border border-orange-500 px-3 py-1 rounded-xl mt-2"
         >
           <span class="text-orange-500 font-bold"
-            >{{ tournament.teamsCount }} / 8</span
+            >{{ tournament.teamCount }} / 8</span
           >
           <span class="text-gray-900"> équipes inscrites</span>
         </span>
@@ -25,43 +27,34 @@
           Voir le tournoi
         </RouterLink>
       </div>
-      <div class="flex justify-center mt-8">
-        <RouterLink
-          to="/tournament/create"
-          class="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition font-semibold"
-        >
-          Créer un nouveau tournoi
-        </RouterLink>
-      </div>
+    </div>
+    <div class="flex justify-center mt-8">
+      <RouterLink
+        to="/tournament/create"
+        class="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition font-semibold"
+      >
+        Créer un nouveau tournoi
+      </RouterLink>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import api from "../api";
 
-// Test
-const tournaments = ref([
-  {
-    id: 1,
-    name: "Champion's League",
-    date: "2026-02-10",
-    description: "Tournoi officiel pour les équipes européennes.",
-    teamsCount: 8,
-  },
-  {
-    id: 2,
-    name: "Ligue 1",
-    date: "2026-03-05",
-    description: "Tournoi officiel pour les équipes fraçaises.",
-    teamsCount: 2,
-  },
-  {
-    id: 4,
-    name: "Liga",
-    date: "2026-02-10",
-    description: "Tournoi officiel pour les équipes espagnoles.",
-    teamsCount: 2,
-  },
-]);
+const tournaments = ref([]);
+const loading = ref(true);
+
+onMounted(async () => {
+  try {
+    const res = await api.get("/tournament");
+
+    tournaments.value = res.data;
+  } catch (error) {
+    console.error("Erreur chargement tournois", error);
+  } finally {
+    loading.value = false;
+  }
+});
 </script>

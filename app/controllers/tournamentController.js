@@ -144,7 +144,8 @@ const tournamentController = {
       });
 
       if (matchs.length > 0) {
-        return res.send("Les matchs ont déjà été générés");
+        // Ici, je veux quand meme renvoyer la liste des matchs pour mon front
+        return res.send({ matchs, message: "Les matchs ont déjà été générés" });
       }
 
       // On push l'id des teams dans le tableau de génération des matchs
