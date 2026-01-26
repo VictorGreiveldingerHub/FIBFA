@@ -2,7 +2,7 @@
 import Header from "./components/Header.vue";
 </script>
 
-<template>
+<template class="flex justify-between">
   <Header />
   <RouterView> </RouterView>
 </template>
