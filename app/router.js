@@ -1,5 +1,8 @@
 const express = require("express");
 
+const auth = require("./middlewares/auth");
+const isAdmin = require("./middlewares/isAdmin");
+
 const matchController = require("./controllers/matchController");
 const teamController = require("./controllers/teamController");
 const tournamentController = require("./controllers/tournamentController");
@@ -18,7 +21,7 @@ router.get("/match/:id", matchController.getOne);
 // Suppression d'un match
 router.delete("/match/:id", matchController.delete);
 // Mise à jour des scores des matchs
-router.put("/match/:id/score", matchController.update);
+router.put("/match/:id/score", auth, matchController.update);
 
 // ========================
 //          Team

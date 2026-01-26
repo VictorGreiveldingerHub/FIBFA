@@ -1,5 +1,5 @@
 const { User } = require("../models");
-
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 const userController = {
@@ -102,7 +102,17 @@ const userController = {
         return res.status(401).send({ error: "Mot de passe incorrect" });
       }
 
-      res.send("Connexion réussie");
+      const token = jwt.sign(
+        {
+          id: user.id,
+          status: user.status,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES },
+      );
+
+      console.log(token);
+      res.send(token);
     } catch (error) {
       console.trace(error);
       res.status(500).send(error);

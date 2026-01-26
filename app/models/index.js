@@ -25,25 +25,6 @@ Match.belongsTo(Tournament, {
   as: "tournament",
 });
 
-// ===============
-// match <-> team
-//  team <-> match
-// ===============
-
-// Match.belongsToMany(Team, {
-//   through: "match_team",
-//   foreignKey: "match_id",
-//   otherKey: "team_id",
-//   as: "teams",
-// });
-
-// Team.belongsToMany(Match, {
-//   through: "match_team",
-//   foreignKey: "team_id",
-//   otherKey: "match_id",
-//   as: "matchs",
-// });
-
 // ==============
 // team <-> user
 // user <-> team
