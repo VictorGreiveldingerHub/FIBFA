@@ -9,7 +9,16 @@
     <div class="flex flex-col gap-4">
       <div class="bg-orange-200 rounded-xl p-6 w-full min-h-[200px]">
         <h2 class="text-xl font-bold mb-4">Matchs du tournoi</h2>
-        <p class="text-gray-700">Les matchs générés apparaîtront ici.</p>
+        <ul class="flex flex-col gap-2">
+          <li
+            v-for="match in matches"
+            :key="match.id"
+            class="bg-white px-3 py-2 rounded-lg shadow-sm"
+          >
+            {{ match.teams[0].name }} {{ match.teams[0].MatchTeam.score }} -
+            {{ match.teams[1].name }} {{ match.teams[1].MatchTeam.score }}
+          </li>
+        </ul>
       </div>
 
       <!-- Bouton génération matchs -->
@@ -98,7 +107,7 @@ const tournamentId = route.params.id;
 const tournament = ref({});
 const tournamentTeams = ref([]);
 const availableTeams = ref([]);
-let matches = ref([]);
+const matches = ref([]);
 const ranking = ref([]);
 const selectedTeamId = ref("");
 
@@ -107,10 +116,9 @@ const loadTournament = async () => {
   try {
     const res = await api.get(`/tournament/${tournamentId}`);
     tournament.value = res.data;
-    // tournamentTeams.value = res.data.teams;
-    // availableTeams.value = res.data.availableTeams;
-    // matches.value = res.data.matches;
-    // ranking.value = res.data.ranking;
+    tournamentTeams.value = res.data.teams;
+    matches.value = res.data.matchs;
+    console.log(matches.value);
   } catch (error) {
     console.error("Erreur chargement tournoi", error);
   }
@@ -119,8 +127,7 @@ const loadTournament = async () => {
 // Générer les matchs
 const generateMatches = async () => {
   try {
-    const res = await api.post(`/tournament/${tournamentId}/generate`);
-    console.log(res); // res.data peut être "Les matchs ont déjà été générés" OU un tableau de matchs
+    await api.post(`/tournament/${tournamentId}/generate`);
     // Ensuite on recharge les matchs depuis le back
     await loadTournament();
   } catch (error) {
@@ -136,7 +143,7 @@ const addTeam = async () => {
       teamId: selectedTeamId.value,
     });
     selectedTeamId.value = "";
-    await loadTournament(); // recharger les équipes et classement
+    await loadTournament();
   } catch (error) {
     console.error("Erreur ajout équipe", error);
   }

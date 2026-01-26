@@ -141,6 +141,13 @@ const tournamentController = {
       // Pour éviter de régénérer un tournois dejà généré
       const matchs = await Match.findAll({
         where: { tournament_id: tournamentId },
+        include: [
+          {
+            model: Team,
+            as: "teams",
+            through: { attributes: ["score", "team_position"] },
+          },
+        ],
       });
 
       if (matchs.length > 0) {
@@ -158,7 +165,7 @@ const tournamentController = {
       if (tournamentDatas.teams.length !== 8) {
         return res
           .status(400)
-          .send("Pas assez d'équipe pour générer les matchs");
+          .send({ message: "Pas assez d'équipe pour générer les matchs" });
       }
 
       // Génération des matchs
