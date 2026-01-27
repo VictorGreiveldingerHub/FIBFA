@@ -1,63 +1,148 @@
 <template>
   <div class="tournament-details min-h-screen p-8 pt-24 flex flex-col gap-10">
-    <!-- Titre du tournoi -->
     <h1 class="text-4xl font-bold text-center">
-      {{ tournament.name }}
+      {{ tournament }}
     </h1>
 
-    <!-- Zone des matchs -->
     <div class="flex flex-col gap-4">
       <div class="bg-orange-200 rounded-xl p-6 w-full min-h-[200px]">
         <h2 class="text-xl font-bold mb-4">Matchs du tournoi</h2>
-        <ul class="flex flex-col gap-2">
+        <ul class="flex flex-col gap-4">
           <li
             v-for="match in matches"
             :key="match.id"
-            class="bg-white px-3 py-2 rounded-lg shadow-sm"
+            class="bg-white px-4 py-4 rounded-xl shadow-md flex flex-col gap-3"
           >
-            {{ match.teams[0].name }} {{ match.teams[0].MatchTeam.score }} -
-            {{ match.teams[1].name }} {{ match.teams[1].MatchTeam.score }}
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <span class="font-semibold text-gray-800">
+                  {{ match.teams[0].name }}
+                </span>
+
+                <span class="text-xl font-bold text-orange-500">
+                  {{ match.teams[0].MatchTeam.score }}
+                </span>
+
+                <span class="text-gray-500 font-bold">-</span>
+
+                <span class="text-xl font-bold text-orange-500">
+                  {{ match.teams[1].MatchTeam.score }}
+                </span>
+
+                <span class="font-semibold text-gray-800">
+                  {{ match.teams[1].name }}
+                </span>
+              </div>
+
+              <span
+                class="px-3 py-1 rounded-full text-sm font-semibold"
+                :class="
+                  match.status === 'PENDING'
+                    ? 'bg-yellow-100 text-yellow-700'
+                    : 'bg-green-100 text-green-700'
+                "
+              >
+                {{ match.status }}
+              </span>
+            </div>
+
+            <div
+              v-if="match.status === 'PENDING'"
+              class="flex items-center gap-4 bg-orange-50 p-3 rounded-lg"
+            >
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-semibold">{{
+                  match.teams[0].name
+                }}</span>
+                <input
+                  type="number"
+                  min="0"
+                  v-model="match.newScoreTeam1"
+                  class="w-16 border border-gray-300 rounded-lg px-2 py-1 text-center"
+                />
+              </div>
+
+              <span class="font-bold">-</span>
+
+              <div class="flex items-center gap-2">
+                <input
+                  type="number"
+                  min="0"
+                  v-model="match.newScoreTeam2"
+                  class="w-16 border border-gray-300 rounded-lg px-2 py-1 text-center"
+                />
+                <span class="text-sm font-semibold">{{
+                  match.teams[1].name
+                }}</span>
+              </div>
+
+              <button
+                @click="updateScore(match)"
+                class="ml-auto bg-orange-500 text-white px-4 py-1.5 rounded-lg hover:bg-orange-600 transition"
+              >
+                Valider
+              </button>
+            </div>
           </li>
         </ul>
       </div>
 
-      <!-- Bouton génération matchs -->
       <div class="flex justify-end">
         <button
           @click="generateMatches"
-          class="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition"
+          :disabled="matches.length > 0"
+          :class="
+            matches.length > 0
+              ? 'bg-gray-400 text-white cursor-not-allowed'
+              : 'bg-orange-500 text-white hover:bg-orange-600'
+          "
+          class="px-6 py-2 rounded-lg transition"
         >
-          Générer les matchs
+          <span v-if="matches.length === 0">Générer les matchs</span>
+          <span v-else>Matchs déjà générés</span>
         </button>
       </div>
     </div>
 
-    <!-- Section du bas : équipes + classement -->
     <div class="flex gap-6">
-      <!-- Équipes du tournoi -->
       <div class="w-1/2 flex flex-col gap-4">
         <div class="bg-orange-200 rounded-xl p-6">
           <h2 class="text-xl font-bold mb-4">Équipes inscrites</h2>
-          <ul class="flex flex-col gap-2">
+          <ul class="flex flex-col gap-3">
             <li
-              v-for="team in tournamentTeams"
+              v-for="(team, index) in tournamentTeams"
               :key="team.id"
-              class="bg-white px-3 py-2 rounded-lg shadow-sm"
+              class="bg-white px-4 py-3 rounded-xl shadow-md flex items-center gap-4"
             >
-              {{ team.name }}
+              <div
+                class="w-8 h-8 flex items-center justify-center bg-orange-500 text-white font-bold rounded-full"
+              >
+                {{ index + 1 }}
+              </div>
+
+              <span class="font-semibold text-gray-800">
+                {{ team.name }}
+              </span>
             </li>
           </ul>
         </div>
 
-        <!-- Ajout d'équipe -->
         <div class="flex gap-3 items-center">
-          <select class="flex-1 border border-gray-300 rounded-lg px-3 py-2">
-            <option disabled selected>Choisir une équipe</option>
-            <option v-for="team in availableTeams" :key="team.id">
+          <select
+            v-model="selectedTeamId"
+            class="flex-1 border border-gray-300 rounded-lg px-3 py-2"
+          >
+            <option disabled value="">Choisir une équipe</option>
+            <option
+              v-for="team in availableTeams"
+              :key="team.id"
+              :value="team.id"
+            >
               {{ team.name }}
             </option>
           </select>
           <button
+            @click="addTeam"
             class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition"
           >
             Ajouter
@@ -65,27 +150,35 @@
         </div>
       </div>
 
-      <!-- Classement -->
       <div class="w-1/2 flex flex-col gap-4">
         <div class="bg-orange-200 rounded-xl p-6">
           <h2 class="text-xl font-bold mb-4">Classement</h2>
           <ul class="flex flex-col gap-2">
             <li
-              v-for="team in ranking"
-              :key="team.id"
-              class="flex justify-between bg-white px-3 py-2 rounded-lg shadow-sm"
+              v-for="(team, index) in ranking"
+              :key="team.team.id"
+              class="flex justify-between items-center px-4 py-3 rounded-xl shadow-md bg-white hover:bg-orange-50 transition"
             >
-              <span class="font-semibold">{{ team.name }}</span>
-              <span class="text-orange-500 font-bold"
-                >{{ team.score }} pts</span
+              <div
+                class="w-8 h-8 flex items-center justify-center rounded-full font-bold text-white bg-orange-500 mr-3 flex-shrink-0"
               >
+                {{ index + 1 }}
+              </div>
+
+              <span class="font-semibold text-gray-800 flex-1">
+                {{ team.team.name }}
+              </span>
+
+              <span class="text-orange-500 font-bold">
+                {{ team.points }} pts
+              </span>
             </li>
           </ul>
         </div>
 
-        <!-- Bouton recharger classement -->
         <div class="flex justify-end">
           <button
+            @click="reloadRanking"
             class="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition"
           >
             Recharger le classement
@@ -115,10 +208,13 @@ const selectedTeamId = ref("");
 const loadTournament = async () => {
   try {
     const res = await api.get(`/tournament/${tournamentId}`);
-    tournament.value = res.data;
+    tournament.value = res.data.name;
     tournamentTeams.value = res.data.teams;
-    matches.value = res.data.matchs;
-    console.log(matches.value);
+    matches.value = res.data.matchs.map((m) => ({
+      ...m,
+      newScoreTeam1: "",
+      newScoreTeam2: "",
+    }));
   } catch (error) {
     console.error("Erreur chargement tournoi", error);
   }
@@ -128,20 +224,32 @@ const loadTournament = async () => {
 const generateMatches = async () => {
   try {
     await api.post(`/tournament/${tournamentId}/generate`);
-    // Ensuite on recharge les matchs depuis le back
     await loadTournament();
   } catch (error) {
     console.error("Erreur génération matchs", error);
   }
 };
 
+const getAvailableTeam = async () => {
+  try {
+    const res = await api.get("/team");
+    availableTeams.value = res.data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des équipes", error);
+  }
+};
+
 // Ajouter une équipe
 const addTeam = async () => {
-  if (!selectedTeamId.value) return;
+  // Conversion parce que sinon mon back peut recevoir un Nan
+  const id = Number(selectedTeamId.value);
+  if (!id) return;
+
   try {
     await api.post(`/tournament/${tournamentId}/team`, {
-      teamId: selectedTeamId.value,
+      team_id: id,
     });
+
     selectedTeamId.value = "";
     await loadTournament();
   } catch (error) {
@@ -153,13 +261,30 @@ const addTeam = async () => {
 const reloadRanking = async () => {
   try {
     const res = await api.get(`/tournament/${tournamentId}/ranking`);
+
     ranking.value = res.data;
   } catch (error) {
     console.error("Erreur rechargement classement", error);
   }
 };
 
+const updateScore = async (match) => {
+  try {
+    await api.put(`/match/${match.id}/score`, {
+      team1Score: match.newScoreTeam1,
+      team2Score: match.newScoreTeam2,
+    });
+
+    await loadTournament();
+    await reloadRanking();
+  } catch (error) {
+    console.error("Erreur modification score", error);
+  }
+};
+
 onMounted(() => {
   loadTournament();
+  reloadRanking();
+  getAvailableTeam();
 });
 </script>

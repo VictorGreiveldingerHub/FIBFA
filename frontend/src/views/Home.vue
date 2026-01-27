@@ -13,7 +13,6 @@
         </span>
         <div class="p-6 rounded-lg max-w-xl mx-auto mt-10">
           <div class="flex flex-col gap-4">
-            <!-- Point 1 -->
             <div class="flex items-start gap-3">
               <div class="text-orange-500 font-bold text-xl">1.</div>
               <p class="text-gray-800">
@@ -22,7 +21,6 @@
               </p>
             </div>
 
-            <!-- Point 2 -->
             <div class="flex items-start gap-3">
               <div class="text-orange-500 font-bold text-xl">2.</div>
               <p class="text-gray-800">

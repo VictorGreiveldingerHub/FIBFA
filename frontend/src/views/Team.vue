@@ -79,7 +79,6 @@
 
           <button class="bg-red-500 text-white">Supprimer l'équipe</button>
 
-          <!-- Section tournois -->
           <div class="w-full flex flex-col gap-4">
             <h3 class="text-2xl font-bold mb-2">
               Participe aux tournois suivants :

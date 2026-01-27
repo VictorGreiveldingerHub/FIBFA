@@ -21,7 +21,7 @@ router.get("/match/:id", matchController.getOne);
 // Suppression d'un match
 router.delete("/match/:id", matchController.delete);
 // Mise à jour des scores des matchs
-router.put("/match/:id/score", auth, matchController.update);
+router.put("/match/:id/score", matchController.update);
 
 // ========================
 //          Team

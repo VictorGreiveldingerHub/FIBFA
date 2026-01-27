@@ -46,7 +46,11 @@ const tournamentController = {
             model: Team,
             as: "teams",
           },
-          { model: Match, as: "matchs" },
+          {
+            model: Match,
+            as: "matchs",
+            include: [{ model: Team, as: "teams" }],
+          },
         ],
       });
 
@@ -320,7 +324,10 @@ const tournamentController = {
       }
 
       // Tri
-      const rankingArray = [...ranking].sort((a, b) => b.points - a.points);
+      // Changer [...ranking], vu que c'est un objet, ca provoque une erreur, passer par Object.values
+      const rankingArray = Object.values(ranking).sort(
+        (a, b) => b.points - a.points,
+      );
 
       res.send(rankingArray);
     } catch (error) {
