@@ -1,80 +1,100 @@
 <template>
   <div
-    class="homepage min-h-screen flex flex-row gap-8 p-6 items-center justify-center"
+    class="homepage min-h-screen bg-gray-50 px-6 pt-16 pb-16 flex flex-col items-center gap-12"
   >
-    <div class="left-panel flex-1 max-w-lg">
-      <div class="max-w-3xl mx-auto">
-        <h2 class="text-4xl font-bold mb-4">
-          FIBFA - Fédération Internationale de Baby Foot Association
-        </h2>
-        <span class="text-gray-700 text-lg">
-          Vous présente l'application de gestion de tournois de baby-foot
-          officiel.
-        </span>
-        <div class="p-6 rounded-lg max-w-xl mx-auto mt-10">
-          <div class="flex flex-col gap-4">
-            <div class="flex items-start gap-3">
-              <div class="text-orange-500 font-bold text-xl">1.</div>
-              <p class="text-gray-800">
-                Inscrivez-vous pour créer votre équipe et participer aux
-                tournois officiels.
-              </p>
-            </div>
+    <!-- Hero principal -->
+    <section class="text-center max-w-4xl mx-auto flex flex-col gap-4">
+      <h1 class="text-5xl font-extrabold text-gray-900">
+        FIBFA — Fédération Internationale de Baby-Foot Association
+      </h1>
+      <p class="text-lg text-gray-700">
+        Gérez vos tournois officiels de baby‑foot, créez des équipes, suivez les
+        matchs et les classements facilement.
+      </p>
 
-            <div class="flex items-start gap-3">
-              <div class="text-orange-500 font-bold text-xl">2.</div>
-              <p class="text-gray-800">
-                Consultez votre classement pour suivre vos performances dans les
-                tournois.
-              </p>
-            </div>
-          </div>
-        </div>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+        <RouterLink
+          to="/signin"
+          class="bg-orange-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition"
+        >
+          S’inscrire
+        </RouterLink>
+        <RouterLink
+          to="/login"
+          class="bg-white border border-orange-500 text-orange-500 px-8 py-3 rounded-lg font-semibold hover:bg-orange-50 transition"
+        >
+          Se connecter
+        </RouterLink>
       </div>
-      <div class="flex gap-8">
-        <button class="bg-orange-500 text-white mt-4 px-6 py-2 rounded-lg">
-          Créer un tournoi
-        </button>
+    </section>
 
-        <button class="bg-orange-500 text-white mt-4 px-6 py-2 rounded-lg">
-          Créer une équipe
-        </button>
-      </div>
-    </div>
-    <div class="right-panel flex flex-col gap-6">
-      <div class="bg-orange-200 p-6 rounded-lg">
-        <h4 class="text-left font-bold text-lg mb-4">Création rapide</h4>
-        <div class="flex flex-col gap-2">
-          <span
-            class="inline-block bg-orange-500 text-white px-3 py-1 rounded-xl"
-          >
-            En quelques clics
-          </span>
-          <span
-            class="inline-block bg-orange-500 text-white px-3 py-1 rounded-xl"
-          >
-            Gestion automatique des matchs du tournoi
-          </span>
-        </div>
+    <!-- Section fonctionnalités clés en grille -->
+    <section
+      class="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+    >
+      <div
+        class="bg-white p-6 rounded-xl shadow-md flex flex-col gap-2 hover:shadow-lg transition"
+      >
+        <h3 class="text-xl font-bold text-gray-800 mb-2">
+          Créez et organisez vos tournois
+        </h3>
+        <p class="text-gray-700 text-sm">
+          Ajoutez un tournoi en quelques clics, définissez la date, la
+          description et commencez à y inscrire des équipes.
+        </p>
       </div>
 
-      <div class="bg-orange-200 p-6 rounded-lg">
-        <h4 class="text-left font-bold text-lg mb-4">Classement</h4>
-        <div class="flex flex-col gap-2">
-          <span
-            class="inline-block bg-orange-500 text-white px-3 py-1 rounded-xl"
-          >
-            Visualisation des scores
-          </span>
-          <span
-            class="inline-block bg-orange-500 text-white px-3 py-1 rounded-xl"
-          >
-            Statistiques
-          </span>
-        </div>
+      <div
+        class="bg-white p-6 rounded-xl shadow-md flex flex-col gap-2 hover:shadow-lg transition"
+      >
+        <h3 class="text-xl font-bold text-gray-800 mb-2">
+          Gestion automatisée des matchs
+        </h3>
+        <p class="text-gray-700 text-sm">
+          Génération instantanée des matchs et suivi des scores, avec planning
+          automatique.
+        </p>
       </div>
-    </div>
+
+      <div
+        class="bg-white p-6 rounded-xl shadow-md flex flex-col gap-2 hover:shadow-lg transition"
+      >
+        <h3 class="text-xl font-bold text-gray-800 mb-2">
+          Inscription et rôle utilisateur
+        </h3>
+        <p class="text-gray-700 text-sm">
+          Créez une équipe, choisissez un coéquipier, et gérez vos
+          participations aux tournois officiels.
+        </p>
+      </div>
+
+      <div
+        class="bg-white p-6 rounded-xl shadow-md flex flex-col gap-2 hover:shadow-lg transition"
+      >
+        <h3 class="text-xl font-bold text-gray-800 mb-2">
+          Classements et statistiques
+        </h3>
+        <p class="text-gray-700 text-sm">
+          Suivez les résultats des matchs, mettez à jour les scores et consultez
+          le classement en temps réel.
+        </p>
+      </div>
+    </section>
+
+    <!-- CTA bas de page -->
+    <section class="text-center flex flex-col gap-4">
+      <h2 class="text-3xl font-bold text-gray-900">Prêt à commencer ?</h2>
+      <p class="text-gray-700">
+        Inscrivez‑vous gratuitement et lancez votre premier tournoi aujourd’hui
+        !
+      </p>
+
+      <RouterLink
+        to="/signin"
+        class="bg-orange-500 text-white px-10 py-3 rounded-lg font-semibold hover:bg-orange-600 transition"
+      >
+        Commencer maintenant
+      </RouterLink>
+    </section>
   </div>
 </template>
-
-<script setup></script>

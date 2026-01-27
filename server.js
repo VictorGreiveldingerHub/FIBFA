@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const session = require("express-session");
 
 const PORT = process.env.PORT || 3000;
 
@@ -11,7 +12,22 @@ const router = require("./app/router");
 app.use(
   cors({
     origin: "http://localhost:5173",
-    credentials: true, // JWT
+    credentials: true,
+  }),
+);
+
+app.use(
+  session({
+    name: "fibfa.sid",
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 1000 * 60 * 60, // 1 heure
+    },
   }),
 );
 

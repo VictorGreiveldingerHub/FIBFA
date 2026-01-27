@@ -1,96 +1,117 @@
 <template>
-  <div class="team-page min-h-screen flex items-center justify-center">
-    <div class="flex w-full max-w-6xl h-full">
-      <div class="w-1/2 flex flex-col justify-center px-12">
+  <div
+    class="team-page min-h-screen flex items-center justify-center bg-gray-50 p-6"
+  >
+    <div class="flex w-full max-w-6xl h-full gap-6">
+      <!-- Colonne info / création -->
+      <div class="w-1/2 flex flex-col justify-center px-12 gap-8">
         <h1 class="text-5xl font-bold mb-4">Gestionnaire des équipes</h1>
         <p class="text-gray-700 text-xl">
-          Rejoignez toutes les équipes disponibles
+          Rejoignez toutes les équipes disponibles !
+        </p>
+        <br />
+        <p class="text-gray-700 text-xl">
+          Une fois votre équipe créée, un administrateur pourra vous ajouter
+          manuellement dans un tournoi.
         </p>
       </div>
-      <div
-        class="w-1/2 bg-orange-500 flex flex-col justify-center items-center p-12"
-      >
+
+      <!-- Colonne équipe / tournois -->
+      <div class="w-1/2 flex flex-col justify-center items-center p-12 gap-6">
+        <!-- Création d'équipe -->
         <div
           v-if="!userTeam"
-          class="bg-white rounded-lg p-8 w-full max-w-md flex flex-col gap-4 shadow-lg"
+          class="bg-white rounded-lg p-8 w-full max-w-md flex flex-col gap-6 shadow-lg"
         >
-          <h2 class="text-2xl font-bold mb-4 text-orange-500">
+          <h2 class="text-2xl font-bold mb-4 text-orange-500 text-center">
             Créer votre équipe
           </h2>
 
-          <div class="flex flex-col gap-1">
-            <label class="text-black font-semibold">Nom de l'équipe</label>
-            <input
-              type="text"
-              placeholder="Nom de l'équipe"
-              class="border border-grey-500 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white"
-              v-model="newTeamName"
-            />
-          </div>
+          <form @submit.prevent="submitTeam" class="flex flex-col gap-4">
+            <!-- Nom équipe -->
+            <div class="flex flex-col gap-2">
+              <label class="text-gray-800 font-semibold">Nom de l'équipe</label>
+              <input
+                type="text"
+                placeholder="Saisissez le nom de l'équipe"
+                v-model="newTeamName"
+                class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                required
+              />
+            </div>
 
-          <div>
-            <label class="block font-semibold mb-1" for="member1"
-              >Membre 1</label
-            >
-            <select
-              id="member1"
-              class="w-full border border-gray-300 rounded-md p-2"
-            >
-              <option value="1">Alice</option>
-              <option value="2">Bob</option>
-              <option value="3">Charlie</option>
-            </select>
-          </div>
+            <!-- Choix du coéquipier -->
+            <div class="flex flex-col gap-2">
+              <label class="text-gray-800 font-semibold"
+                >Choisir un coéquipier</label
+              >
+              <select
+                v-model="selectedTeammateId"
+                class="border border-gray-300 rounded-lg px-4 py-2"
+                required
+              >
+                <option disabled value="">Sélectionnez un joueur</option>
+                <option
+                  v-for="user in availableUsers"
+                  :key="user.id"
+                  :value="user.id"
+                >
+                  {{ user.pseudo }}
+                </option>
+              </select>
+            </div>
 
-          <div>
-            <label class="block font-semibold mb-1" for="member2"
-              >Membre 2</label
-            >
-            <select
-              id="member2"
-              class="w-full border border-gray-300 rounded-md p-2"
-            >
-              <option value="4">Diana</option>
-              <option value="5">Eve</option>
-              <option value="6">Frank</option>
-            </select>
-          </div>
+            <!-- Messages -->
+            <p v-if="error" class="text-red-500 text-sm">{{ error }}</p>
+            <p v-if="success" class="text-green-500 text-sm">{{ success }}</p>
 
-          <button
-            class="bg-white text-orange-500 font-semibold px-4 py-2 rounded-lg border border-orange-500 hover:bg-orange-100 transition mt-2"
-          >
-            Créer l'équipe
-          </button>
+            <!-- Bouton -->
+            <button
+              type="submit"
+              class="bg-orange-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-orange-600 transition mt-2"
+            >
+              Créer l'équipe
+            </button>
+          </form>
         </div>
 
-        <div v-if="userTeam" class="w-full max-w-4xl flex flex-col gap-8">
+        <!-- Équipe existante -->
+        <div v-if="userTeam" class="w-full flex flex-col gap-6">
+          <!-- Carte équipe -->
           <div
-            class="bg-white rounded-lg p-8 shadow-lg w-full flex flex-col items-left"
+            class="bg-white rounded-lg p-6 shadow-lg flex flex-col gap-4 w-full min-h-[200px]"
           >
-            <h2 class="text-xl font-bold mb-2">
-              <span class="text-black">Nom de l'équipe : </span>
+            <h2 class="text-xl font-bold">
+              <span class="text-gray-800">Nom de l'équipe : </span>
               <span class="text-orange-500">{{ userTeam.name }}</span>
             </h2>
-            <h2 class="text-xl font-bold mb-2">
-              <span class="text-black">Partenaire : </span>
-              <span class="text-orange-500">{{ userTeam.name }}</span>
+            <h2 class="text-xl font-bold">
+              <span class="text-gray-800">Partenaire : </span>
+              <span class="text-orange-500">{{ userTeam.partner }}</span>
             </h2>
+
+            <button
+              @click="deleteTeam(userTeam.id)"
+              class="bg-red-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-600 transition w-max"
+            >
+              Supprimer l'équipe
+            </button>
           </div>
 
-          <button class="bg-red-500 text-white">Supprimer l'équipe</button>
-
+          <!-- Tournois -->
           <div class="w-full flex flex-col gap-4">
             <h3 class="text-2xl font-bold mb-2">
               Participe aux tournois suivants :
             </h3>
-
             <div class="flex flex-col gap-4">
               <div
                 v-for="tournament in tournaments"
                 :key="tournament.id"
-                class="bg-orange-200 p-4 rounded-lg shadow-md flex flex-col gap-2 w-full"
+                class="bg-orange-200 p-4 rounded-lg shadow-md flex flex-col gap-2 w-full min-h-[120px]"
               >
-                <h4 class="text-xl font-bold">{{ tournament.name }}</h4>
+                <h4 class="text-xl font-bold text-gray-800">
+                  {{ tournament.name }}
+                </h4>
                 <RouterLink
                   :to="`/tournament/${tournament.id}`"
                   class="mt-2 bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition w-max"
@@ -107,33 +128,59 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import api from "../api";
 
-const isAuthenticated = ref(true);
-const userTeam = ref({ name: "Test", partner: "Louis" });
-const newTeamName = ref();
+const newTeamName = ref("");
+const selectedTeammateId = ref("");
+const availableUsers = ref([]);
+const userTeam = ref(null);
+const tournaments = ref([]);
+const error = ref("");
+const success = ref("");
 
-const tournaments = ref([
-  {
-    id: 1,
-    name: "Champion's League",
-    date: "2026-02-10",
-    description: "Tournoi officiel pour les équipes européennes.",
-    teamsCount: 8,
-  },
-  {
-    id: 2,
-    name: "Ligue 1",
-    date: "2026-03-05",
-    description: "Tournoi officiel pour les équipes fraçaises.",
-    teamsCount: 2,
-  },
-  {
-    id: 4,
-    name: "Liga",
-    date: "2026-02-10",
-    description: "Tournoi officiel pour les équipes espagnoles.",
-    teamsCount: 2,
-  },
-]);
+// Charger les utilisateurs et tournois
+const loadData = async () => {
+  try {
+    const usersRes = await api.get("/user"); // Tous les joueurs disponibles
+    availableUsers.value = usersRes.data;
+
+    const tournamentsRes = await api.get("/tournament"); // Tous les tournois
+    tournaments.value = tournamentsRes.data;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// Création équipe
+const submitTeam = async () => {
+  error.value = "";
+  success.value = "";
+  try {
+    const res = await api.post("/team", {
+      name: newTeamName.value,
+      teammate_id: Number(selectedTeammateId.value),
+    });
+    success.value = `Équipe "${res.data.name}" créée avec succès !`;
+    userTeam.value = res.data;
+    newTeamName.value = "";
+    selectedTeammateId.value = "";
+
+    await loadData();
+  } catch (err) {
+    error.value = err.response?.data || "Erreur serveur";
+  }
+};
+
+// Suppression équipe
+const deleteTeam = async (teamId) => {
+  try {
+    await api.delete(`/team/${teamId}`);
+    userTeam.value = null;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+onMounted(loadData);
 </script>

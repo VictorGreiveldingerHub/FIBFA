@@ -6,6 +6,7 @@ import Login from "../views/Login.vue";
 import Tournament from "../views/Tournament.vue";
 import Team from "../views/Team.vue";
 import TournamentDetails from "../views/TournamentDetails.vue";
+import TournamentCreate from "../views/TournamentCreate.vue";
 
 // Création du router
 const router = createRouter({
@@ -17,6 +18,7 @@ const router = createRouter({
     { path: "/tournament", name: "Tournois", component: Tournament },
     { path: "/team", name: "Equipe", component: Team },
     { path: "/tournament/:id", component: TournamentDetails },
+    { path: "/tournament/create", component: TournamentCreate },
   ],
 });
 

@@ -7,6 +7,7 @@ const matchController = require("./controllers/matchController");
 const teamController = require("./controllers/teamController");
 const tournamentController = require("./controllers/tournamentController");
 const userController = require("./controllers/userController");
+const authController = require("./controllers/authController");
 
 const router = express.Router();
 
@@ -63,13 +64,14 @@ router.get("/tournament/:id/ranking", tournamentController.getRanking);
 
 // Récupérer tous les utilisateurs
 router.get("/user", userController.getAll);
-// Création d'un utilisateur
-router.post("/user/signup", userController.create);
-// Vérification des infos pour se connecter
-router.post("/user/login", userController.login);
 // Récupérer un utilisateur
 router.get("/user/:id", userController.getOne);
 // Supprimer un utilisateur
 router.delete("/user/:id", userController.delete);
+
+// Création d'un utilisateur
+router.post("/signup", authController.signin);
+// Vérification des infos pour se connecter
+router.post("/login", authController.login);
 
 module.exports = router;

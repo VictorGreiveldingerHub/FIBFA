@@ -12,18 +12,20 @@
 
       <p class="text-center">
         <span class="text-black">Vous n'avez pas encore de compte ? </span>
-        <RouterLink to="/signin" class="text-orange-500 font-semibold"
-          >Inscrivez-vous</RouterLink
-        >
+        <RouterLink to="/signin" class="text-orange-500 font-semibold">
+          Inscrivez-vous
+        </RouterLink>
       </p>
 
-      <form class="flex flex-col gap-4">
+      <form @submit.prevent="login" class="flex flex-col gap-4">
         <div class="flex flex-col gap-1">
           <label class="text-gray-700 font-semibold">Adresse e-mail</label>
           <input
             type="email"
+            v-model="email"
             placeholder="Saisissez votre e-mail"
             class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            required
           />
         </div>
 
@@ -31,10 +33,14 @@
           <label class="text-gray-700 font-semibold">Mot de passe</label>
           <input
             type="password"
+            v-model="password"
             placeholder="Saisissez votre mot de passe"
             class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            required
           />
         </div>
+
+        <p v-if="error" class="text-red-500 text-sm text-center">{{ error }}</p>
 
         <button
           type="submit"
@@ -48,5 +54,35 @@
 </template>
 
 <script setup>
-import { RouterLink } from "vue-router";
+import { ref } from "vue";
+import { useRouter, RouterLink } from "vue-router";
+import api from "../api";
+
+const router = useRouter();
+
+const email = ref("");
+const password = ref("");
+const error = ref("");
+
+const login = async () => {
+  error.value = "";
+
+  try {
+    const res = await api.post("/login", {
+      email: email.value,
+      password: password.value,
+    });
+
+    // On stocke le token
+    localStorage.setItem("token", res.data.token);
+
+    // On configure axios pour envoyer le token automatiquement
+    api.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
+
+    // Redirection après connexion
+    router.push("/");
+  } catch (err) {
+    error.value = err.response?.data || "Email ou mot de passe incorrect";
+  }
+};
 </script>
