@@ -83,6 +83,15 @@ npm install
 npm run dev
 ```
 
+# Pour se connecter en tant qu'ADMIN pour tester les fonctionnalités,
+
+Email = clementine@laxou.fr
+Mdp = admin
+
+# Pour se connecter en tant qu'utilisateur USER
+
+-> Création d"un compte
+
 ## Installation sans docker
 
 ## 1. Prérequis
