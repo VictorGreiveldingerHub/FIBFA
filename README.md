@@ -63,6 +63,18 @@ docker exec -it fibfa_db psql -U fibfa -d fibfa (par exemple)
 
 Le frontend se lance en local (hors Docker).
 
+Assurez-vous d’avoir les éléments suivants installés :
+
+### Node.js ≥ 24
+
+Téléchargement : [https://nodejs.org/](https://nodejs.org/)
+
+Vérifier l’installation :
+
+```bash
+node -v
+```
+
 ```bash
 cd frontend
 
