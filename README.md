@@ -47,11 +47,29 @@ Si vous voyez : nodemon: not found, aassurez vous de l'installer manuellement à
 npm install nodemon --save
 ```
 
+## Ensuite supprimer les anciens containers et images
+
+```bash
+docker-compose down -rmi all --volumes
+```
+
+## Rebuild et lancer
+
+```bash
+docker-compose up --build -d
+```
+
 ## Vérifier que tout fonctionne
 
 ```bash
 docker-compose logs -f db      # logs de la base
 docker-compose logs -f app     # logs du serveur backend
+```
+
+## Tester la route
+
+```bash
+curl http://localhost:54520/user
 ```
 
 La base PostgreSQL sera initialisée automatiquement avec les fichiers SQL dans ./data.
