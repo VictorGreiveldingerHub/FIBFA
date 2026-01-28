@@ -9,7 +9,7 @@ export const fetchUser = async () => {
     const res = await api.get("/whoiam");
     user.value = res.data;
     isAuthenticated.value = true;
-  } catch {
+  } catch (error) {
     user.value = null;
     isAuthenticated.value = false;
     alert(error.response.data.error);

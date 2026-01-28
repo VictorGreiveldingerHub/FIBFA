@@ -87,7 +87,7 @@ const signin = async () => {
     await fetchUser();
     router.push(`/`);
   } catch (error) {
-    alert(error.response.data.error);
+    alert(error);
   }
 };
 </script>
