@@ -39,6 +39,14 @@ Construire et lancer les containers
 docker-compose up --build -d
 ```
 
+## Important
+
+Si vous voyez : nodemon: not found, aassurez vous de l'installer manuellement à la racine du projet avant d'effectuer la commande ci-dessus !
+
+```bash
+npm install nodemon --save
+```
+
 ## Vérifier que tout fonctionne
 
 ```bash
