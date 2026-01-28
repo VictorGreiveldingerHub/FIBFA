@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 
 # Copy package files and install deps
 COPY package*.json ./
-RUN npm install
+RUN npm install --include=dev
 
 # Copy project files
 COPY . .
