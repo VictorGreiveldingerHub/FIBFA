@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16.3
+    container_name: fibfa_db
+    restart: always
+    environment:
+      POSTGRES_USER: fibfa
+      POSTGRES_PASSWORD: fibfa
+      POSTGRES_DB: fibfa
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/docker-entrypoint-initdb.d # SQL d'initialisation
+      - fibfa_db_data:/var/lib/postgresql/data # volume persistant
+
+  app:
+    build: .
+    container_name: fibfa_app
+    restart: always
+    ports:
+      - "${PORT}:54520"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - .:/usr/src/app
+    command: npm run dev # ou npm start selon ton setup
+
+volumes:
+  fibfa_db_data:

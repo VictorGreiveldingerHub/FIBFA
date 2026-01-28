@@ -116,7 +116,7 @@ VALUES
 
 INSERT INTO "user"("pseudo", "email", "password", "status", "is_verified", "team_id") 
 VALUES
-  ('SuperUser', 'admin@fibfa.com', 'superUser', 'ADMIN', true, null),
+  ('Super_Clementine', 'clementine@laxou.fr', 'admin', 'ADMIN', true, null),
   ('Messi', 'messi@barcelone.com', 'messi', 'USER', true, 1),
   ('Iniesta', 'iniesta@barcelone.com', 'iniesta', 'USER', true, 1),
   ('Ronaldo', 'ronaldo@realmadrid.com', 'ronaldo', 'USER', true, 2),

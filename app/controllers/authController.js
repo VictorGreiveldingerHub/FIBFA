@@ -55,6 +55,14 @@ const authController = {
         return next();
       }
 
+      // Script pour changer les mdp non hash présent deja en base
+      if (!user.password.startsWith("$2b$")) {
+        // ancien mot de passe en clair
+        const newHash = await bcrypt.hash(password, 10);
+        user.password = newHash;
+        await user.save();
+      }
+
       // On compare le mot de passe envoyé avec le hash en BDD
       const passwordMatch = await bcrypt.compare(password, user.password);
 

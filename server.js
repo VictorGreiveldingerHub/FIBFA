@@ -19,15 +19,15 @@ app.use(
 app.use(cookieParser());
 app.use(
   session({
-    name: "fibfa.sid",
-    secret: "keyboard cat",
-    resave: true,
-    saveUninitialized: false,
+    name: process.env.SESSION_NAME || "fibfa.sid",
+    secret: process.env.SESSION_SECRET || "keyboard cat",
+    resave: false,
+    saveUninitialized: true, // docker issues si false
     cookie: {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
-      maxAge: 1000 * 60 * 60, // 1 heure
+      maxAge: Number(process.env.SESSION_MAX_AGE) || 1000 * 60 * 60, // 1h
     },
   }),
 );
@@ -39,5 +39,5 @@ app.use(express.urlencoded({ extended: true }));
 app.use(router);
 
 app.listen(PORT, () => {
-  console.log(`Server listening on ${PORT}`);
+  console.log(`Serveur FIBFA à l'écoute sur le port : ${PORT}`);
 });
