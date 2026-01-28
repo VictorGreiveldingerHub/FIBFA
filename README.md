@@ -1,4 +1,4 @@
-# FIBFA - Fédération Internationnale de Baby-Foot Français
+# FIBFA - Fédération Internationnale de Baby-Foot Association
 
 FIBFA (Fédération Internationale de Baby-Foot Association) est une application pour gérer les tournois de baby-foot, créer des équipes, suivre les matchs et consulter les classements.
 
@@ -14,11 +14,64 @@ FIBFA (Fédération Internationale de Baby-Foot Association) est une application
 
 Plus d'informations dans la [doc](/Doc/).
 
-# Lancer le projet en local
+# Installation Avec Docker
 
-## Installation
+- **Docker** & **Docker Compose**  
+  Télécharger : [https://www.docker.com/get-started](https://www.docker.com/get-started)
 
-### 1. Prérequis
+## Cloner le dépôt et créer les variables d'environnements
+
+```bash
+git clone git@github.com:VictorGreiveldingerHub/FIBFA.git
+
+cp .env.example .env
+```
+
+## Lancer le projet avec Docker
+
+Construire et lancer les containers
+
+À la racine du projet :
+
+```bash
+docker-compose up --build -d
+```
+
+## Vérifier que tout fonctionne
+
+```bash
+docker-compose logs -f db      # logs de la base
+docker-compose logs -f app     # logs du serveur backend
+```
+
+La base PostgreSQL sera initialisée automatiquement avec les fichiers SQL dans ./data.
+
+Si vous voulez vérifier que la DB fonctionne :
+
+```bash
+docker exec -it fibfa_db psql -U $DB_USER -d $DB_NAME
+
+
+//
+
+docker exec -it fibfa_db psql -U fibfa -d fibfa (par exemple)
+```
+
+## Installer et lancer le frontend
+
+Le frontend se lance en local (hors Docker).
+
+```bash
+cd frontend
+
+npm install
+
+npm run dev
+```
+
+## Installation sans docker
+
+## 1. Prérequis
 
 Assurez-vous d’avoir les éléments suivants installés :
 
@@ -52,22 +105,63 @@ Vérifier l’installation :
 psql --version
 ```
 
-# Cloner le dépôt
-
-```bash
-git clone git@github.com:VictorGreiveldingerHub/FIBFA.git
-```
-
-# Installer les dépendances du backend
+## Installer les dépendances du backend
 
 ```bash
 npm install
 ```
 
-# Installer les dépendances du frontend
+## Installer les dépendances du frontend
 
 ```bash
 cd frontend
-
 npm install
 ```
+
+## Mise en place BDD
+
+### Se connecter au système en tant que postgres
+
+```bash
+sudo -i -u postgres
+```
+
+### Se connecter au serveur en tant que postgres
+
+```bash
+psql
+```
+
+### Créer un nouvel utilisateur
+
+```bash
+CREATE USER login WITH PASSWORD 'motdepasse' LOGIN;
+```
+
+### Créer une nouvelle base, en déclarant son propriétaire
+
+```bash
+CREATE DATABASE nomDeLaBase OWNER nomDuUser;
+```
+
+### Se connecter à la base de données nouvellement créée, avec l'utilisateur nouvellement créé
+
+```bash
+psql -U nomDeLutilisateur -d nomDeLaBase
+```
+
+Note: par défaut, si on ne met pas -d nomDeLaBase, on se connecte automatiquement à la base de données qui porte le même nom que l'utilisateur.
+
+### Executer les instructions SQL contenues dans un fichier
+
+On aura souvent, dans les projets, un fichier SQL destiné à mettre en place la première version de la base de données. Ces fichiers ne contiennent pas la donnée directement, mais bien les instructions pour créer les tables et y injecter les données.
+
+```bash
+psql -U nomDeLutilisateur -d nomDeLaBase -f chemin/du/fichier.sql
+
+```
+
+## Accès à l'application
+
+- Backend : http://localhost:54520
+- Frontend : http://localhost:5173 (ou le port affiché par Vite)
