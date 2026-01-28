@@ -87,7 +87,9 @@
             </h2>
             <h2 class="text-xl font-bold">
               <span class="text-gray-800">Partenaire : </span>
-              <span class="text-orange-500">{{ userTeam.partner }}</span>
+              <span class="text-orange-500">
+                {{ userTeam.partner[1]?.pseudo || "Aucun" }}
+              </span>
             </h2>
 
             <button
@@ -142,33 +144,41 @@ const success = ref("");
 // Charger les utilisateurs et tournois
 const loadData = async () => {
   try {
-    const usersRes = await api.get("/user"); // Tous les joueurs disponibles
-    availableUsers.value = usersRes.data;
+    // 1️⃣ Vérifie si l'utilisateur a déjà une team
+    const getMyTeam = await api.get("/team/me");
+    console.log(getMyTeam.data);
+    userTeam.value = getMyTeam.data; // null si pas de team
 
-    const tournamentsRes = await api.get("/tournament"); // Tous les tournois
-    tournaments.value = tournamentsRes.data;
-  } catch (err) {
-    console.error(err);
+    // 2️⃣ Si pas de team, charger les utilisateurs disponibles pour création
+    if (!userTeam.value) {
+      const usersRes = await api.get("/user");
+      availableUsers.value = usersRes.data;
+    }
+  } catch (error) {
+    alert(error.response.data.error);
   }
 };
 
 // Création équipe
 const submitTeam = async () => {
+  const id = Number(selectedTeammateId.value);
   error.value = "";
   success.value = "";
   try {
     const res = await api.post("/team", {
       name: newTeamName.value,
-      teammate_id: Number(selectedTeammateId.value),
+      teammate_id: id,
     });
     success.value = `Équipe "${res.data.name}" créée avec succès !`;
     userTeam.value = res.data;
     newTeamName.value = "";
     selectedTeammateId.value = "";
 
-    await loadData();
-  } catch (err) {
-    error.value = err.response?.data || "Erreur serveur";
+    // Ne pas recharger tous les tournois après création de team
+    // await loadData();
+    router.push(`/team/${res.data.id}`);
+  } catch (error) {
+    alert(error.response.data.error);
   }
 };
 
@@ -177,8 +187,9 @@ const deleteTeam = async (teamId) => {
   try {
     await api.delete(`/team/${teamId}`);
     userTeam.value = null;
-  } catch (err) {
-    console.error(err);
+    await loadData();
+  } catch (error) {
+    alert(error.response.data.error);
   }
 };
 

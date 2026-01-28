@@ -27,7 +27,9 @@ const tournamentController = {
       res.send(result);
     } catch (error) {
       console.trace(error);
-      res.status(500).send(error);
+      res
+        .status(500)
+        .send({ error: "Erreur lors de la récupération de tous les tournois" });
     }
   },
 
@@ -61,7 +63,9 @@ const tournamentController = {
       res.send(tournamentDatas);
     } catch (error) {
       console.trace(error);
-      res.status(500).send(error);
+      res
+        .status(500)
+        .send({ error: "Erreur lors de la récupération du tournois" });
     }
   },
 
@@ -94,7 +98,7 @@ const tournamentController = {
       res.send(tournament);
     } catch (error) {
       console.trace(error);
-      res.status(500).send(error);
+      res.status(500).send({ error: "Erreur lors de la création de l'équipe" });
     }
   },
 
@@ -156,7 +160,7 @@ const tournamentController = {
 
       if (matchs.length > 0) {
         // Ici, je veux quand meme renvoyer la liste des matchs pour mon front
-        return res.send({ matchs, message: "Les matchs ont déjà été générés" });
+        return res.send({ matchs, error: "Les matchs ont déjà été générés" });
       }
 
       // On push l'id des teams dans le tableau de génération des matchs
@@ -169,7 +173,7 @@ const tournamentController = {
       if (tournamentDatas.teams.length !== 8) {
         return res
           .status(400)
-          .send({ message: "Pas assez d'équipe pour générer les matchs" });
+          .send({ error: "Pas assez d'équipe pour générer les matchs" });
       }
 
       // Génération des matchs
@@ -208,7 +212,9 @@ const tournamentController = {
       res.send(createdMatches);
     } catch (error) {
       console.trace(error);
-      res.status(500).send({ error: "Erreur serveur" });
+      res
+        .status(500)
+        .send({ error: "Erreur lors de la génération des matches" });
     }
   },
 
@@ -240,7 +246,9 @@ const tournamentController = {
 
       // Si la team est deja dans le tournois => 400
       if (tournament.teams.some((team) => team.id === teamId)) {
-        return res.status(400).send("Equipe déja présente dans le tournois");
+        return res
+          .status(400)
+          .send({ error: "Equipe déja présente dans le tournois" });
       }
 
       const team = await Team.findByPk(teamId);
@@ -259,7 +267,7 @@ const tournamentController = {
       });
     } catch (error) {
       console.trace(error);
-      res.status(500).send({ error: "Erreur serveur" });
+      res.status(500).send({ error: "Erreur lors de l'ajout d'une équipe" });
     }
   },
 

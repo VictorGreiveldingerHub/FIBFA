@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
 
 const PORT = process.env.PORT || 3000;
 
@@ -15,12 +16,12 @@ app.use(
     credentials: true,
   }),
 );
-
+app.use(cookieParser());
 app.use(
   session({
     name: "fibfa.sid",
     secret: "keyboard cat",
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,

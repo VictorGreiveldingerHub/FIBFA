@@ -24,10 +24,16 @@ const authController = {
         password: hashedPassword,
       });
 
-      res.send(newUser);
+      req.session.user = {
+        id: newUser.id,
+        pseudo: newUser.pseudo,
+        role: newUser.status,
+      };
+
+      res.send(req.session.user);
     } catch (error) {
       console.trace(error);
-      res.status(500).send(error);
+      res.status(500).send({ error: "Une erreur s'est produite" });
     }
   },
   /**
@@ -38,9 +44,9 @@ const authController = {
    */
   login: async (req, res, next) => {
     try {
-      console.log(req.headers.cookie);
       // Les données du form
       const { email, password } = req.body;
+
       // Récupération de l'utilisateur via email
       const user = await User.findOne({ where: { email } });
 
@@ -69,29 +75,33 @@ const authController = {
     }
   },
 
-  /**
-   * Suppression d'un utilisateur
-   * Avec :
-   * - l'id de l'utilisateur
-   */
-  logout: async (req, res, next) => {
+  // Pour gérer l'utilisateur une fois connecté
+  whoiam: async (req, res, next) => {
     try {
-      // Id de l'utilisateur
-      const userId = parseInt(req.params.id);
-
-      const user = await User.findByPk(userId);
-
-      if (!user) {
-        // 404
-        return next();
-      }
-
-      await user.destroy();
-
-      res.send("Utilisateur supprimé avec succès");
+      res.send(req.session.user);
     } catch (error) {
       console.trace(error);
       res.status(500).send(error);
+    }
+  },
+
+  // Déconnexion
+  logout: async (req, res) => {
+    try {
+      req.session.destroy((err) => {
+        if (err) {
+          return res
+            .status(500)
+            .send({ error: "Erreur lors de la déconnexion" });
+        }
+
+        res.clearCookie("sid");
+
+        res.send({ message: "Déconnecté" });
+      });
+    } catch (error) {
+      console.trace(error);
+      res.status(500).send({ error: "Erreur lors de la déconnexion" });
     }
   },
 };

@@ -95,6 +95,10 @@ BEGIN;
 -- TEAM
 -- ================
 
+UPDATE "user"
+SET status = 'ADMIN'
+WHERE email = 'clementine@laxou.fr';
+
 INSERT INTO "team"("name") 
 VALUES
   ('BB FC Barcelone'),

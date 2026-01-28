@@ -22,10 +22,10 @@
       </template>
 
       <template v-else>
-        <span class="font-semibold text-gray-700"> Bonjour {{ pseudo }} </span>
+        <span class="font-semibold">Bonjour {{ user.pseudo }}</span>
         <button
-          @click="logout"
-          class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition"
+          @click="handleLogout"
+          class="bg-red-500 text-white px-3 py-1 rounded"
         >
           Déconnexion
         </button>
@@ -35,6 +35,24 @@
 </template>
 
 <script setup>
-const logout = () => {};
+import { user, isAuthenticated, fetchUser, logout } from "../stores/auth";
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+onMounted(() => {
+  fetchUser();
+});
+
+const handleLogout = async () => {
+  try {
+    await logout();
+
+    router.push("/login");
+  } catch (error) {
+    alert(error);
+  }
+};
 </script>
 <style scoped></style>

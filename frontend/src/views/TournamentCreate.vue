@@ -71,10 +71,11 @@ const createTournament = async () => {
       date: date.value,
       description: description.value,
     });
+
     // redirige vers le tournoi créé
     router.push(`/tournament/${res.data.id}`);
   } catch (error) {
-    console.error("Erreur création tournoi", error);
+    alert(error.response.data.error);
   }
 };
 </script>

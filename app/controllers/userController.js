@@ -18,7 +18,9 @@ const userController = {
       res.send(users);
     } catch (error) {
       console.trace(error);
-      res.status(500).send(error);
+      res
+        .status(500)
+        .send({ error: "Erreur lors de la récupération des utilisateus" });
     }
   },
 
@@ -42,7 +44,9 @@ const userController = {
       res.send(user);
     } catch (error) {
       console.trace(error);
-      res.status(500).send(error);
+      res
+        .status(500)
+        .send({ error: "Erreur lors de la récupération de l'utilisateur" });
     }
   },
 
@@ -68,7 +72,9 @@ const userController = {
       res.send("Utilisateur supprimé avec succès");
     } catch (error) {
       console.trace(error);
-      res.status(500).send(error);
+      res
+        .status(500)
+        .send({ error: "Erreur lors de la suppression de lu'itlisateur" });
     }
   },
 };

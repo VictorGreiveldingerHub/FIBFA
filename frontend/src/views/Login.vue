@@ -56,6 +56,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter, RouterLink } from "vue-router";
+import { fetchUser } from "../stores/auth";
 import api from "../api";
 
 const router = useRouter();
@@ -65,24 +66,17 @@ const password = ref("");
 const error = ref("");
 
 const login = async () => {
-  error.value = "";
-
   try {
-    const res = await api.post("/login", {
+    await api.post("/login", {
       email: email.value,
       password: password.value,
     });
 
-    // On stocke le token
-    localStorage.setItem("token", res.data.token);
+    await fetchUser();
 
-    // On configure axios pour envoyer le token automatiquement
-    api.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
-
-    // Redirection après connexion
     router.push("/");
-  } catch (err) {
-    error.value = err.response?.data || "Email ou mot de passe incorrect";
+  } catch (error) {
+    alert(error.response.data.error);
   }
 };
 </script>

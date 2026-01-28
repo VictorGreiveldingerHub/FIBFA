@@ -32,12 +32,11 @@ Match.belongsTo(Tournament, {
 
 Team.hasMany(User, {
   foreignKey: "team_id",
-  as: "users",
+  as: "partner",
 });
 
 User.belongsTo(Team, {
   foreignKey: "team_id",
-  as: "team",
 });
 
 // =========================

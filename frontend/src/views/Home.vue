@@ -1,6 +1,6 @@
 <template>
   <div
-    class="homepage min-h-screen bg-gray-50 px-6 pt-16 pb-16 flex flex-col items-center gap-12"
+    class="homepage min-h-screen bg-gray-50 px-6 pt-30 pb-16 flex flex-col items-center gap-12"
   >
     <!-- Hero principal -->
     <section class="text-center max-w-4xl mx-auto flex flex-col gap-4">

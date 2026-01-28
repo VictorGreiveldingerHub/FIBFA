@@ -15,7 +15,7 @@ const teamController = {
         include: [
           {
             model: User,
-            as: "users",
+            as: "partner",
           },
           { model: Match, as: "matchs" },
           { model: Tournament, as: "tournaments" },
@@ -31,7 +31,9 @@ const teamController = {
       res.send(teams);
     } catch (error) {
       console.trace(error);
-      res.status(500).send(error);
+      res.status(500).send({
+        error: "Erreur lors de la récupération de toutes les équipes",
+      });
     }
   },
 
@@ -44,7 +46,16 @@ const teamController = {
     try {
       const teamId = parseInt(req.params.id);
 
-      const team = await Team.findByPk(teamId);
+      const team = await Team.findByPk(teamId, {
+        include: [
+          {
+            model: Tournament,
+            as: "tournaments",
+            attributes: ["id", "name"],
+            through: { attributes: [] }, // Evite de renvoyer la table de jointure
+          },
+        ],
+      });
 
       // Team introuvable
       if (!team) {
@@ -55,10 +66,45 @@ const teamController = {
       res.send(team);
     } catch (error) {
       console.trace(error);
-      res.status(500).send(error);
+      res
+        .status(500)
+        .send({ error: "Erreur lors de la récupération de l'équipe" });
     }
   },
 
+  getMyTeam: async (req, res) => {
+    try {
+      const userId = req.session.user.id;
+
+      const user = await User.findByPk(userId, {
+        include: {
+          model: Team,
+          include: [
+            {
+              model: Tournament,
+              as: "tournaments",
+            },
+            {
+              model: User,
+              as: "partner",
+              attributes: ["id", "pseudo"],
+            },
+          ],
+        },
+      });
+
+      // Si l'utilisateur n'a pas de team
+      if (!user || !user.Team) {
+        return res.send(null);
+      }
+
+      console.log(user);
+      res.send(user.Team);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "Erreur serveur" });
+    }
+  },
   /**
    * Création d'une nouvelle team
    * Associé avec :
@@ -71,11 +117,11 @@ const teamController = {
       // Récupération du nom et id team mate
       const { name, teammate_id } = req.body;
 
-      const creator_id = 18; // req.user.id; // Une fois que mon auth est en place
+      const creator_id = req.session.user.id;
 
       // Si pas d'id créateur / coéquipié
       if (!creator_id || !teammate_id) {
-        return res.status(400).send("Joueur introuvable");
+        return res.status(400).send({ error: "Joueur introuvable" });
       }
 
       const newTeam = await Team.create({ name });
@@ -84,7 +130,7 @@ const teamController = {
       const teammate = await User.findByPk(teammate_id);
 
       if (!creator || !teammate) {
-        return res.status(400).send("Joueur introuvable");
+        return res.status(400).send({ error: "Joueur introuvable" });
       }
 
       // On passe l'id de la nouvelle team au créateur
@@ -92,10 +138,20 @@ const teamController = {
       // On passe l'id de la nouvelle team au coéquipier
       await teammate.setTeam(newTeam);
 
-      res.send(newTeam);
+      const fullTeam = await Team.findByPk(newTeam.id, {
+        include: [
+          {
+            model: User,
+            as: "partner",
+            attributes: ["id", "pseudo"],
+          },
+        ],
+      });
+
+      res.send(fullTeam);
     } catch (error) {
       console.trace(error);
-      res.status(500).send(error);
+      res.status(500).send({ error: "Erreur lors de la création de l'équipe" });
     }
   },
 
@@ -119,7 +175,9 @@ const teamController = {
       res.send("Team supprimée avec succès");
     } catch (error) {
       console.trace(error);
-      res.status(500).send(error);
+      res
+        .status(500)
+        .send({ error: "Erreur lors de la suppression de l'équipe " });
     }
   },
 };

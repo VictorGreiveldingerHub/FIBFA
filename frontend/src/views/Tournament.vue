@@ -74,7 +74,7 @@ const getAllTournaments = async () => {
 
     tournaments.value = res.data;
   } catch (error) {
-    console.error("Erreur chargement tournois", error);
+    alert(error.response.data.error);
   }
 };
 
@@ -85,7 +85,7 @@ const deleteTournament = async (tournamentId) => {
       (tournament) => tournament.id !== tournamentId,
     );
   } catch (error) {
-    console.error("Erreur à la suppression du tournois", error);
+    alert(error.response.data.error);
   }
 };
 

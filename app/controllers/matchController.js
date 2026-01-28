@@ -21,7 +21,9 @@ const matchController = {
       res.send(matchs);
     } catch (error) {
       console.trace(error);
-      res.status(500).send(error);
+      res
+        .status(500)
+        .send({ error: "Erreur lors de la récupération des matches" });
     }
   },
 
@@ -60,7 +62,9 @@ const matchController = {
       res.send(match);
     } catch (error) {
       console.trace(error);
-      res.status(500).send(error);
+      res
+        .status(500)
+        .send({ error: "Erreur lors de la récupération du matche" });
     }
   },
 
@@ -99,7 +103,7 @@ const matchController = {
         where: { match_id: matchId },
       });
 
-      // Si il le compte des équipes != 2
+      // Si le compte des équipes != 2
       if (matchTeams.length !== 2) {
         return res.status(400).send("Match incomplet ou inexistant");
       }
@@ -114,7 +118,9 @@ const matchController = {
       res.send("Score mis à jour", matchTeams);
     } catch (error) {
       console.trace(error);
-      res.status(500).send({ error: "Erreur serveur" });
+      res
+        .status(500)
+        .send({ error: "Erreur lors de la mise à jour des scores" });
     }
   },
 };

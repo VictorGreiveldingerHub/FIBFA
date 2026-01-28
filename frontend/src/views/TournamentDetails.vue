@@ -212,7 +212,7 @@ const loadTournament = async () => {
       newScoreTeam2: "",
     }));
   } catch (error) {
-    console.error("Erreur chargement tournoi", error);
+    alert(error.response.data.error);
   }
 };
 
@@ -222,7 +222,7 @@ const generateMatches = async () => {
     await api.post(`/tournament/${tournamentId}/generate`);
     await loadTournament();
   } catch (error) {
-    console.error("Erreur génération matchs", error);
+    alert(error.response?.data.error);
   }
 };
 
@@ -230,9 +230,10 @@ const generateMatches = async () => {
 const getAvailableTeam = async () => {
   try {
     const res = await api.get("/team");
+    console.log(res);
     availableTeams.value = res.data;
   } catch (error) {
-    console.error("Erreur lors de la récupération des équipes", error);
+    alert(error.response.data.error);
   }
 };
 
@@ -250,7 +251,7 @@ const addTeam = async () => {
     selectedTeamId.value = "";
     await loadTournament();
   } catch (error) {
-    console.error("Erreur ajout équipe", error);
+    alert(error.response.data.error);
   }
 };
 
@@ -261,7 +262,7 @@ const reloadRanking = async () => {
 
     ranking.value = res.data;
   } catch (error) {
-    console.error("Erreur rechargement classement", error);
+    alert(error.response.data.error);
   }
 };
 
@@ -275,7 +276,7 @@ const updateScore = async (match) => {
     await loadTournament();
     await reloadRanking();
   } catch (error) {
-    console.error("Erreur modification score", error);
+    alert(error.response.data.error);
   }
 };
 
