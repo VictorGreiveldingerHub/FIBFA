@@ -148,7 +148,7 @@ const loadData = async () => {
     const getMyTeam = await api.get("/team/me");
     console.log(getMyTeam.data);
     userTeam.value = getMyTeam.data; // null si pas de team
-
+    tournaments.value = getMyTeam.data.tournaments;
     // 2️⃣ Si pas de team, charger les utilisateurs disponibles pour création
     if (!userTeam.value) {
       const usersRes = await api.get("/user");

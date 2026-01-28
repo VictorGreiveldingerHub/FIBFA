@@ -17,7 +17,9 @@
         </RouterLink>
       </p>
 
+      <!-- FORMULAIRE DE CONNEXION -->
       <form @submit.prevent="login" class="flex flex-col gap-4">
+        <!-- EMAIL -->
         <div class="flex flex-col gap-1">
           <label class="text-gray-700 font-semibold">Adresse e-mail</label>
           <input
@@ -28,7 +30,7 @@
             required
           />
         </div>
-
+        <!-- MDP -->
         <div class="flex flex-col gap-1">
           <label class="text-gray-700 font-semibold">Mot de passe</label>
           <input

@@ -10,7 +10,9 @@
         En quelques clics
       </h2>
 
+      <!-- Création d'un tournois -->
       <form @submit.prevent="createTournament" class="flex flex-col gap-4">
+        <!-- NOM -->
         <div class="flex flex-col gap-1">
           <label class="text-gray-700 font-semibold">Nom du tournoi</label>
           <input
@@ -21,7 +23,7 @@
             required
           />
         </div>
-
+        <!-- DATE -->
         <div class="flex flex-col gap-1">
           <label class="text-gray-700 font-semibold">Date du tournoi</label>
           <input
@@ -31,7 +33,7 @@
             required
           />
         </div>
-
+        <!-- DESCRIPTION -->
         <div class="flex flex-col gap-1">
           <label class="text-gray-700 font-semibold">Description</label>
           <textarea

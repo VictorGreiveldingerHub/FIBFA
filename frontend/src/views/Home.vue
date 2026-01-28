@@ -2,7 +2,8 @@
   <div
     class="homepage min-h-screen bg-gray-50 px-6 pt-30 pb-16 flex flex-col items-center gap-12"
   >
-    <!-- Hero principal -->
+    <!-- HERO -->
+    <!-- VOIR POUR FAIRE CONDITIONNELLE AFFICHAGE PAR LA SUITE -->
     <section class="text-center max-w-4xl mx-auto flex flex-col gap-4">
       <h1 class="text-5xl font-extrabold text-gray-900">
         FIBFA — Fédération Internationale de Baby-Foot Association
@@ -28,7 +29,7 @@
       </div>
     </section>
 
-    <!-- Section fonctionnalités clés en grille -->
+    <!-- FOCNTIONNALIT2S -->
     <section
       class="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
     >
@@ -81,7 +82,7 @@
       </div>
     </section>
 
-    <!-- CTA bas de page -->
+    <!-- REDIRECTION SIGNIN -->
     <section class="text-center flex flex-col gap-4">
       <h2 class="text-3xl font-bold text-gray-900">Prêt à commencer ?</h2>
       <p class="text-gray-700">

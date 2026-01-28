@@ -16,8 +16,9 @@
           >Connectez-vous</RouterLink
         >
       </p>
-
+      <!-- FORMULAIRE -->
       <form class="flex flex-col gap-4" @submit.prevent="signin">
+        <!-- PSEUDO -->
         <div class="flex flex-col gap-1">
           <label class="text-gray-700 font-semibold">Pseudo</label>
           <input
@@ -28,7 +29,7 @@
             class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
-
+        <!-- EMAIL -->
         <div class="flex flex-col gap-1">
           <label class="text-gray-700 font-semibold">Adresse e-mail</label>
           <input
@@ -40,6 +41,7 @@
           />
         </div>
 
+        <!-- MDP -->
         <div class="flex flex-col gap-1">
           <label class="text-gray-700 font-semibold">Mot de passe</label>
           <input

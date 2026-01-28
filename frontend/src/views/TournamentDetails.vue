@@ -5,6 +5,7 @@
     </h1>
 
     <div class="flex flex-col lg:flex-row gap-6">
+      <!-- LISTE DES MATCHES -->
       <div
         class="w-full lg:w-1/2 bg-orange-50 rounded-xl p-6 flex flex-col gap-4 shadow-lg"
       >
@@ -16,6 +17,8 @@
               :key="match.id"
               class="bg-white px-4 py-4 rounded-xl shadow-sm flex flex-col gap-3 hover:shadow-md transition"
             >
+              <!-- EQUIPES + SCORE -->
+
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-4">
                   <span class="font-semibold text-gray-800">{{
@@ -32,6 +35,8 @@
                     match.teams[1].name
                   }}</span>
                 </div>
+                <!-- STATUS DU MATCHe -->
+
                 <span
                   class="px-3 py-1 rounded-full text-sm font-semibold"
                   :class="
@@ -73,7 +78,7 @@
                     match.teams[1].name
                   }}</span>
                 </div>
-
+                <!-- VALIDATION SCORE -->
                 <button
                   @click="updateScore(match)"
                   class="ml-auto bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition shadow-md"
@@ -84,7 +89,7 @@
             </li>
           </ul>
         </div>
-
+        <!-- GENERATION DES MATCHS -->
         <div class="flex justify-end mt-4">
           <button
             @click="generateMatches"
@@ -101,7 +106,7 @@
           </button>
         </div>
       </div>
-
+      <!-- CLASSEMENTS TOURNOIS -->
       <div class="w-full lg:w-1/2 flex flex-col gap-4">
         <div class="bg-orange-50 rounded-xl p-6 flex-1 shadow-lg">
           <h2 class="text-xl font-bold mb-4 text-gray-800">Classement</h2>
@@ -126,7 +131,7 @@
               </li>
             </ul>
           </div>
-
+          <!-- RECHARGEMENT  -->
           <div class="flex justify-end mt-4">
             <button
               @click="reloadRanking"
@@ -136,7 +141,7 @@
             </button>
           </div>
         </div>
-
+        <!-- LISTE EQUIPE -->
         <div class="bg-orange-50 rounded-xl p-6 shadow-lg">
           <h2 class="text-xl font-bold mb-4 text-gray-800">
             Équipes inscrites
@@ -157,7 +162,7 @@
               </li>
             </ul>
           </div>
-
+          <!-- FORMULAIRE D4AJOUT D4UNE TEAM -->
           <div class="flex gap-3 items-center mt-3">
             <select
               v-model="selectedTeamId"
