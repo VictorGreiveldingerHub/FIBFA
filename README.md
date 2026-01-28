@@ -27,6 +27,8 @@ git clone git@github.com:VictorGreiveldingerHub/FIBFA.git
 cp .env.example .env
 ```
 
+## Remplir les varaibales d'envrironnement selon le fichier d'example
+
 ## Lancer le projet avec Docker
 
 Construire et lancer les containers
